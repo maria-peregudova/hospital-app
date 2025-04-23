@@ -1,0 +1,20 @@
+#include <iostream>
+#include <string>
+
+void print(int nr){ //Funkcja zapisująca dane _nr_ pacjentów do pliku "dane.txt"                                                                                                                                   
+  std::string filename;
+  std::ofstream file;
+  file.open("dane.txt");
+  for(int i=0;i<nr;i++){
+    file<<"2,"<<x<<","<<y<<"\n";
+  }
+    file.close();
+  }
+int const n=10; //base number of patients
+int nr_of_patients;
+
+
+int main(){
+srand(time(NULL)); 
+nr_of_patients = rand%n+1
+

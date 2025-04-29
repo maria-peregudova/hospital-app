@@ -100,7 +100,7 @@ class Pomiary
     {
         Zakres zakres_cS, zakres_cR, zakres_tetno, zakres_utl, zakres_cukier, zakres_temp; // zakresy zmiennych
         double roznica_cS = 0, roznica_cR = 0, roznica_tetno = 0, roznica_utl = 0, roznica_cukier = 0, roznica_temp = 0; // roznice zmiennych
-
+//Ustala stan pacjenta w zależności od wieku
         if (wiek < 1) { // niemowlę
             zakres_cS = {60, 90}; zakres_cR = {30, 60}; zakres_tetno = {100, 160};
             zakres_utl = {90, 100}; zakres_temp = {36.0, 37.5}; zakres_cukier = {60, 100};
@@ -217,29 +217,33 @@ class Pacjent
     {
         if (wiek < 1)
         {
-            wzrost = rand() % 30 + 50;
-            waga = rand() % 7 + 3;
-        } else if (wiek < 5)
+            wzrost = rand() % 30 + 50; //50-80
+            waga = rand() % 7 + 3; //3-10
+        } 
+        else if (wiek < 5)
         {
-            wzrost = rand() % 30 + 70;
-            waga = rand() % 10 + 12;
-        } else if (wiek < 12)
+            wzrost = rand() % 30 + 70; //70-100
+            waga = rand() % 10 + 12; //12-22
+        } 
+        else if (wiek < 12)
         {
-            wzrost = rand() % 60 + 80;
-
-            waga = rand() % 21 + 20;
-        } else if (wiek < 18)
+            wzrost = rand() % 60 + 80; //80-140
+            waga = rand() % 21 + 20; //20-41
+        } 
+        else if (wiek < 18)
         {
-            wzrost = rand() % 50 + 130;
-            waga = rand() % 32 + 40;
-        } else if (wiek < 65)
+            wzrost = rand() % 50 + 130; //130-180
+            waga = rand() % 32 + 40; //40-72
+        } 
+        else if (wiek < 65)
         {
-            wzrost = rand() % 50 + 155;
-            waga = rand() % 42 + 60;
-        } else 
+            wzrost = rand() % 50 + 155; //155-205
+            waga = rand() % 42 + 60; //60-102
+        } 
+        else 
         {
-            wzrost = rand() % 30 + 150;
-            waga = rand() % 32 + 55;
+            wzrost = rand() % 30 + 150; //150-180
+            waga = rand() % 32 + 55; //55-87
         }
     }
 
@@ -268,7 +272,7 @@ class Pacjent
     Pacjent (int ID, string Pesel, string Imie, string Nazwisko, int Wiek, string dolegliwosc) // konstruktor do pacjenta
     : id(ID), pesel(Pesel), imie(Imie), nazwisko(Nazwisko), wiek(Wiek), dolegliwosc(dolegliwosc) // lista inicjalizacyjna
     { // instukcje wykonywane przez konstruktor
-        plec = (imie.back() == 'a') ? "Kobieta" : "Mężczyzna"; // sprawdza plec po ostatniej cyfrze imienia
+        plec = (imie.back() == 'a') ? "Kobieta" : "Mężczyzna"; // sprawdza plec po ostatniej literze imienia
         wylosujWzrost_Wage(); // losuje wzrost i wagę
         wylosujPomiary(); // losuje wyniki pomiarów
     }
@@ -293,10 +297,12 @@ int main()
 {
     srand(time(0)); // zapewnia całkowita losowość wyników
 
-    int liczba_pacjentow = rand() % 5 + 2;
+    int liczba_pacjentow = rand() % 5 + 2; //Tyle pacjentów wylosuje - wylosowany pacjent będzie dodany do bazy danych jeżeli go w niej nie było albo jego wyniki i stan będą zmienione - symulacja odczytu wyników z maszyn w szpitalu
 
     string imiona[100] =
     {
+ //Imiona kobiet kończą się literą 'a'
+ 
         "Anna", "Maria", "Katarzyna", "Magdalena", "Agnieszka",
         "Joanna", "Barbara", "Ewa", "Krystyna", "Elżbieta",
         "Zofia", "Teresa", "Halina", "Irena", "Jadwiga",

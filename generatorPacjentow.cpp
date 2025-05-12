@@ -16,8 +16,7 @@ class Pomiary
 {
     protected:
 
-    int cisnienie_skurczowe, cisnienie_rozkurczowe, tetno, utlenienie, poziom_cukru, stan; // zmienne chronione przed dostepem publicznym
-    double temperatura_ciala;
+    int cisnienie_skurczowe, cisnienie_rozkurczowe, tetno, utlenienie, poziom_cukru, stan, temperatura_ciala; // zmienne chronione przed dostepem publicznym
 
     public:
     // gettery do pozyskiwania wartości zmiennych
@@ -51,7 +50,7 @@ class Pomiary
         return stan;
     }
 
-    double get_temp()
+    int get_temp()
     {
         return temperatura_ciala;
     }
@@ -82,7 +81,7 @@ class Pomiary
         poziom_cukru = wartosc;
     }
 
-    void set_temp(double wartosc)
+    void set_temp(int wartosc)
     {
         temperatura_ciala = wartosc;
     }
@@ -103,19 +102,19 @@ class Pomiary
 //Ustala stan pacjenta w zależności od wieku
         if (wiek < 1) { // niemowlę
             zakres_cS = {60, 90}; zakres_cR = {30, 60}; zakres_tetno = {100, 160};
-            zakres_utl = {90, 100}; zakres_temp = {36.0, 37.5}; zakres_cukier = {60, 100};
+            zakres_utl = {90, 100}; zakres_temp = {360, 375}; zakres_cukier = {60, 100};
         } else if (wiek < 12) { // dziecko
             zakres_cS = {90, 110}; zakres_cR = {55, 75}; zakres_tetno = {75, 120};
-            zakres_utl = {92, 100}; zakres_temp = {36.0, 38.0}; zakres_cukier = {70, 110};
+            zakres_utl = {92, 100}; zakres_temp = {360, 380}; zakres_cukier = {70, 110};
         } else if (wiek < 18) { // nastolatek
             zakres_cS = {100, 120}; zakres_cR = {65, 80}; zakres_tetno = {60, 100};
-            zakres_utl = {94, 100}; zakres_temp = {36.0, 38.0}; zakres_cukier = {70, 110};
+            zakres_utl = {94, 100}; zakres_temp = {360, 380}; zakres_cukier = {70, 110};
         } else if (wiek < 65) { // dorosły
             zakres_cS = {110, 130}; zakres_cR = {70, 85}; zakres_tetno = {60, 100};
-            zakres_utl = {95, 100}; zakres_temp = {35.5, 38.5}; zakres_cukier = {70, 125};
+            zakres_utl = {95, 100}; zakres_temp = {355, 385}; zakres_cukier = {70, 125};
         } else { // senior
             zakres_cS = {110, 140}; zakres_cR = {70, 90}; zakres_tetno = {60, 100};
-            zakres_utl = {93, 100}; zakres_temp = {35.5, 38.0}; zakres_cukier = {70, 140};
+            zakres_utl = {93, 100}; zakres_temp = {355, 380}; zakres_cukier = {70, 140};
         }
 
         // Różnica ciśnienia skurczowego
@@ -196,7 +195,7 @@ class Pomiary
         tetno = 0;
         utlenienie = 0;
         poziom_cukru = 0;
-        temperatura_ciala = 0.0;
+        temperatura_ciala = 0;
         stan = 1;
     };
     
@@ -254,7 +253,7 @@ class Pacjent
         pomiary.set_tetno(rand() % 61 + 50);
         pomiary.set_utl(rand() % 11 + 90);
         pomiary.set_cukier(rand() % 160 + 40);
-        pomiary.set_temp((rand() % 80 / 10) + 35.5);
+        pomiary.set_temp((rand() % 90) + 345);
         pomiary.sprawdzStan(wiek); // sprawdza stan na podstawie wieku pacjenta
     }
 

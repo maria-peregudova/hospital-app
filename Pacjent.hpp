@@ -1,5 +1,6 @@
 #ifndef PACJENT_HPP
 #define PACJENT_HPP
+#include<string>
 
 class Osoba{
 public:

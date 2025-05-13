@@ -1,7 +1,7 @@
 #ifndef PACJENT_HPP
 #define PACJENT_HPP
 #include<string>
-
+using namespace std;
 class Osoba{
 public:
 

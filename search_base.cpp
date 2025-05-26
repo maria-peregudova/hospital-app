@@ -2,7 +2,7 @@
 #include <string>
 #include "sqlite3.h"
 
-int main(int aggc, char* qrgv[]){
+int main(int argc, char* argv[]){
   bool exit=1;
   sqlite3 *db;
   const char* star = "%";

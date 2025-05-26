@@ -3,291 +3,198 @@
 #include <fstream> // działania na plikach
 #include <string> // stringi i ich metody np. back()
 #include <ctime> // time()
+#include "generator_pacjentow.hpp"
 
 using namespace std;
- 
-struct Zakres // struktura zakresu stworzona by uprościć działanie na pomiarach
+
+// Gettery
+int Pomiary::get_cS() const {
+    return cisnienie_skurczowe;
+}
+
+int Pomiary::get_cR() const {
+    return cisnienie_rozkurczowe;
+}
+
+int Pomiary::get_tetno() const {
+    return tetno;
+}
+
+int Pomiary::get_utl() const {
+    return utlenienie;
+}
+
+int Pomiary::get_cukier() const {
+    return poziom_cukru;
+}
+
+int Pomiary::get_stan() const {
+    return stan;
+}
+
+int Pomiary::get_temp() const {
+    return temperatura_ciala;
+}
+
+// Settery
+void Pomiary::set_cS(int wartosc) {
+    cisnienie_skurczowe = wartosc;
+}
+
+void Pomiary::set_cR(int wartosc) {
+    cisnienie_rozkurczowe = wartosc;
+}
+
+void Pomiary::set_tetno(int wartosc) {
+    tetno = wartosc;
+}
+
+void Pomiary::set_utl(int wartosc) {
+    utlenienie = wartosc;
+}
+
+void Pomiary::set_cukier(int wartosc) {
+    poziom_cukru = wartosc;
+}
+
+void Pomiary::set_temp(int wartosc) {
+    temperatura_ciala = wartosc;
+}
+
+// Metoda oceniająca stan na podstawie różnicy
+int Pomiary::ocenaStanu(double roznica) {
+    if (roznica < 10) return 1;
+    else if (roznica <= 20) return 2;
+    else if (roznica <= 30) return 3;
+    else if (roznica <= 40) return 4;
+    else return 5;          
+}
+
+// Metoda sprawdzająca stan pacjenta w zależności od wieku
+void Pomiary::sprawdzStan(int wiek) {
+    Zakres zakres_cS, zakres_cR, zakres_tetno, zakres_utl, zakres_cukier, zakres_temp;
+    double roznica_cS = 0, roznica_cR = 0, roznica_tetno = 0, roznica_utl = 0, roznica_cukier = 0, roznica_temp = 0;
+
+    // Ustalenie zakresów dla różnych grup wiekowych
+    if (wiek < 1) { // niemowlę
+        zakres_cS = {60, 90}; zakres_cR = {30, 60}; zakres_tetno = {100, 160};
+        zakres_utl = {90, 100}; zakres_temp = {360, 375}; zakres_cukier = {60, 100};
+    } else if (wiek < 12) { // dziecko
+        zakres_cS = {90, 110}; zakres_cR = {55, 75}; zakres_tetno = {75, 120};
+        zakres_utl = {92, 100}; zakres_temp = {360, 380}; zakres_cukier = {70, 110};
+    } else if (wiek < 18) { // nastolatek
+        zakres_cS = {100, 120}; zakres_cR = {65, 80}; zakres_tetno = {60, 100};
+        zakres_utl = {94, 100}; zakres_temp = {360, 380}; zakres_cukier = {70, 110};
+    } else if (wiek < 65) { // dorosły
+        zakres_cS = {110, 130}; zakres_cR = {70, 85}; zakres_tetno = {60, 100};
+        zakres_utl = {95, 100}; zakres_temp = {355, 385}; zakres_cukier = {70, 125};
+    } else { // senior
+        zakres_cS = {110, 140}; zakres_cR = {70, 90}; zakres_tetno = {60, 100};
+        zakres_utl = {93, 100}; zakres_temp = {355, 380}; zakres_cukier = {70, 140};
+    }
+
+    // Obliczanie odchyleń od normy dla każdego parametru
+    if (cisnienie_skurczowe < zakres_cS.min) roznica_cS = zakres_cS.min - cisnienie_skurczowe;
+    else if (cisnienie_skurczowe > zakres_cS.max) roznica_cS = cisnienie_skurczowe - zakres_cS.max;
+
+    if (cisnienie_rozkurczowe < zakres_cR.min) roznica_cR = zakres_cR.min - cisnienie_rozkurczowe;
+    else if (cisnienie_rozkurczowe > zakres_cR.max) roznica_cR = cisnienie_rozkurczowe - zakres_cR.max;
+
+    if (tetno < zakres_tetno.min) roznica_tetno = zakres_tetno.min - tetno;
+    else if (tetno > zakres_tetno.max) roznica_tetno = tetno - zakres_tetno.max;
+
+    if (utlenienie < zakres_utl.min) roznica_utl = zakres_utl.min - utlenienie;
+    else if (utlenienie > zakres_utl.max) roznica_utl = utlenienie - zakres_utl.max;
+
+    if (poziom_cukru < zakres_cukier.min) roznica_cukier = zakres_cukier.min - poziom_cukru;
+    else if (poziom_cukru > zakres_cukier.max) roznica_cukier = poziom_cukru - zakres_cukier.max;
+
+    if (temperatura_ciala < zakres_temp.min) roznica_temp = zakres_temp.min - temperatura_ciala;
+    else if (temperatura_ciala > zakres_temp.max) roznica_temp = temperatura_ciala - zakres_temp.max;
+
+    // Ocena stanu
+    stan = 1;
+    if (ocenaStanu(roznica_cS) > stan) stan = ocenaStanu(roznica_cS);
+    if (ocenaStanu(roznica_cR) > stan) stan = ocenaStanu(roznica_cR);
+    if (ocenaStanu(roznica_tetno) > stan) stan = ocenaStanu(roznica_tetno);
+    if (ocenaStanu(roznica_utl) > stan) stan = ocenaStanu(roznica_utl);
+    if (ocenaStanu(roznica_cukier) > stan) stan = ocenaStanu(roznica_cukier);
+    if (ocenaStanu(roznica_temp) > stan) stan = ocenaStanu(roznica_temp);
+}
+
+// konstruktor pomiary
+Pomiary::Pomiary() 
 {
-    double min;
-    double max;
-};
-
-class Pomiary 
-{
-    protected:
-
-    int cisnienie_skurczowe, cisnienie_rozkurczowe, tetno, utlenienie, poziom_cukru, stan, temperatura_ciala; // zmienne chronione przed dostepem publicznym
-
-    public:
-    // gettery do pozyskiwania wartości zmiennych
-    int get_cS()
-    {
-        return cisnienie_skurczowe;
-    }
-
-    int get_cR()
-    {
-        return cisnienie_rozkurczowe;
-    }
-
-    int get_tetno()
-    {
-        return tetno;
-    }
-
-    int get_utl()
-    {
-        return utlenienie;
-    }
-
-    int get_cukier() 
-    {
-        return poziom_cukru;
-    }
-
-    int get_stan()
-    {
-        return stan;
-    }
-
-    int get_temp()
-    {
-        return temperatura_ciala;
-    }
-
-    // settery do ustalania wartości zmiennych
-    void set_cS(int wartosc)
-    {
-        cisnienie_skurczowe = wartosc;
-    }
-
-    void set_cR(int wartosc)
-    {
-        cisnienie_rozkurczowe = wartosc;
-    }
-
-    void set_tetno(int wartosc)
-    {
-        tetno = wartosc;
-    }
-
-    void set_utl(int wartosc)
-    {
-        utlenienie = wartosc;
-    }
-
-    void set_cukier(int wartosc) 
-    {
-        poziom_cukru = wartosc;
-    }
-
-    void set_temp(int wartosc)
-    {
-        temperatura_ciala = wartosc;
-    }
-
-
-    int ocenaStanu(double roznica) { // ocenia stan na podstawie wielkości różnicy
-        if (roznica < 10) return 1;
-        else if (roznica <= 20) return 2;
-        else if (roznica <= 30) return 3;
-        else if (roznica <= 40) return 4;
-        else return 5;          
-    }
-    
-    void sprawdzStan(int wiek)
-    {
-        Zakres zakres_cS, zakres_cR, zakres_tetno, zakres_utl, zakres_cukier, zakres_temp; // zakresy zmiennych
-        double roznica_cS = 0, roznica_cR = 0, roznica_tetno = 0, roznica_utl = 0, roznica_cukier = 0, roznica_temp = 0; // roznice zmiennych
-//Ustala stan pacjenta w zależności od wieku
-        if (wiek < 1) { // niemowlę
-            zakres_cS = {60, 90}; zakres_cR = {30, 60}; zakres_tetno = {100, 160};
-            zakres_utl = {90, 100}; zakres_temp = {360, 375}; zakres_cukier = {60, 100};
-        } else if (wiek < 12) { // dziecko
-            zakres_cS = {90, 110}; zakres_cR = {55, 75}; zakres_tetno = {75, 120};
-            zakres_utl = {92, 100}; zakres_temp = {360, 380}; zakres_cukier = {70, 110};
-        } else if (wiek < 18) { // nastolatek
-            zakres_cS = {100, 120}; zakres_cR = {65, 80}; zakres_tetno = {60, 100};
-            zakres_utl = {94, 100}; zakres_temp = {360, 380}; zakres_cukier = {70, 110};
-        } else if (wiek < 65) { // dorosły
-            zakres_cS = {110, 130}; zakres_cR = {70, 85}; zakres_tetno = {60, 100};
-            zakres_utl = {95, 100}; zakres_temp = {355, 385}; zakres_cukier = {70, 125};
-        } else { // senior
-            zakres_cS = {110, 140}; zakres_cR = {70, 90}; zakres_tetno = {60, 100};
-            zakres_utl = {93, 100}; zakres_temp = {355, 380}; zakres_cukier = {70, 140};
-        }
-
-        // Różnica ciśnienia skurczowego
-        if (cisnienie_skurczowe < zakres_cS.min)
-        {
-            roznica_cS = zakres_cS.min - cisnienie_skurczowe;
-        } else if (cisnienie_skurczowe > zakres_cS.max)
-        {
-            roznica_cS = cisnienie_skurczowe - zakres_cS.max;
-        }
-
-        // Różnica ciśnienia rozkurczowego
-        if (cisnienie_rozkurczowe < zakres_cR.min)
-        {
-            roznica_cR = zakres_cR.min - cisnienie_rozkurczowe;
-        } else if (cisnienie_rozkurczowe > zakres_cR.max)
-        {
-            roznica_cR = cisnienie_rozkurczowe - zakres_cR.max;
-        }
-        
-        // Różnica tętna
-        if (tetno < zakres_tetno.min)
-        {
-            roznica_tetno = zakres_tetno.min - tetno;
-        } else if (tetno > zakres_tetno.max)
-        {
-            roznica_tetno = tetno - zakres_tetno.max;
-        }
-
-        // Różnica utlenienia
-        if (utlenienie < zakres_utl.min)
-        {
-            roznica_utl = zakres_utl.min - utlenienie;
-        } else if (utlenienie > zakres_utl.max)
-        {
-            roznica_utl = utlenienie - zakres_utl.max;
-        }
-
-        // Różnica poziom cukru
-        if (poziom_cukru < zakres_cukier.min)
-        {
-            roznica_cukier = zakres_cukier.min - poziom_cukru;
-        } else if (poziom_cukru > zakres_cukier.max)
-        {
-            roznica_cukier = poziom_cukru - zakres_cukier.max;
-        }
-
-        // Różnica temperatury
-        if (temperatura_ciala < zakres_temp.min)
-        {
-            roznica_temp = zakres_temp.min - temperatura_ciala;
-        } else if (temperatura_ciala > zakres_temp.max)
-        {
-            roznica_temp = temperatura_ciala - zakres_temp.max;
-        }
-
-        // ustala ocene stanu dla każdej zmiennej
-        int stan_cS = ocenaStanu(roznica_cS);
-        int stan_cR = ocenaStanu(roznica_cR);
-        int stan_tetno = ocenaStanu(roznica_tetno);
-        int stan_utl = ocenaStanu(roznica_utl);
-        int stan_cukier = ocenaStanu(roznica_cukier);
-        int stan_temp = ocenaStanu(roznica_temp);
-
-        stan = 1;
-        if (stan_cS > stan) stan = stan_cS;
-        if (stan_cR > stan) stan = stan_cR;
-        if (stan_tetno > stan) stan = stan_tetno;
-        if (stan_utl > stan) stan = stan_utl;
-        if (stan_cukier > stan) stan = stan_cukier;
-        if (stan_temp > stan) stan = stan_temp;
-    }
-
-    Pomiary() // konstruktor pomiarow
-    {
-        cisnienie_skurczowe = 0;
-        cisnienie_rozkurczowe = 0;
-        tetno = 0;
-        utlenienie = 0;
-        poziom_cukru = 0;
-        temperatura_ciala = 0;
-        stan = 1;
-    };
-    
-    ~Pomiary() {} // destuktor pomiarow
-
-};
-
-class Pacjent 
-{
-    protected: // zmienne chronione przed dostepem publicznym
-    int id, wiek, wzrost, waga;
-    string imie, nazwisko, plec, pesel, dolegliwosc;
-    Pomiary pomiary;
-
-    public:
-
-    void wylosujWzrost_Wage() // losuje wagę i wzrost dla pacjenta w jednej funkcji;
-    {
-        if (wiek < 1)
-        {
-            wzrost = rand() % 30 + 50; //50-80
-            waga = rand() % 7 + 3; //3-10
-        } 
-        else if (wiek < 5)
-        {
-            wzrost = rand() % 30 + 70; //70-100
-            waga = rand() % 10 + 12; //12-22
-        } 
-        else if (wiek < 12)
-        {
-            wzrost = rand() % 60 + 80; //80-140
-            waga = rand() % 21 + 20; //20-41
-        } 
-        else if (wiek < 18)
-        {
-            wzrost = rand() % 50 + 130; //130-180
-            waga = rand() % 32 + 40; //40-72
-        } 
-        else if (wiek < 65)
-        {
-            wzrost = rand() % 50 + 155; //155-205
-            waga = rand() % 42 + 60; //60-102
-        } 
-        else 
-        {
-            wzrost = rand() % 30 + 150; //150-180
-            waga = rand() % 32 + 55; //55-87
-        }
-    }
-
-    void wylosujPomiary() 
-    {
-        pomiary.set_cS(rand() % 61 + 80); // ustala losowe wartości pomiarów i przypisuje je do zmiennych
-        pomiary.set_cR(rand() % 31 + 50);
-        pomiary.set_tetno(rand() % 61 + 50);
-        pomiary.set_utl(rand() % 11 + 90);
-        pomiary.set_cukier(rand() % 160 + 40);
-        pomiary.set_temp((rand() % 90) + 345);
-        pomiary.sprawdzStan(wiek); // sprawdza stan na podstawie wieku pacjenta
-    }
-
-    void zapisz(ofstream &plik) {
-        // plik << "ID PESEL Imię Nazwisko Wiek Płeć Wzrost Waga"
-        //     << "Ciśnienie_skurczowe Ciśnienie_rozkurczowe Tętno "
-        //     << "Utlenienie Poziom_Cukru Temperatura Stan Dolegliwość\n";
-        plik << id << " " << pesel << " " << imie << " " << nazwisko << " "
-            << wiek << " " << plec << " " << wzrost << " " << waga << " "
-            << pomiary.get_cS() << " " << pomiary.get_cR() << " "
-            << pomiary.get_tetno() << " " << pomiary.get_utl() << " " << pomiary.get_cukier() << " "
-            << pomiary.get_temp() << " " << pomiary.get_stan() << " " << dolegliwosc << "\n";
-    }
-
-    Pacjent (int ID, string Pesel, string Imie, string Nazwisko, int Wiek, string dolegliwosc) // konstruktor do pacjenta
-    : id(ID), pesel(Pesel), imie(Imie), nazwisko(Nazwisko), wiek(Wiek), dolegliwosc(dolegliwosc) // lista inicjalizacyjna
-    { // instukcje wykonywane przez konstruktor
-        plec = (imie.back() == 'a') ? "Kobieta" : "Mężczyzna"; // sprawdza plec po ostatniej literze imienia
-        wylosujWzrost_Wage(); // losuje wzrost i wagę
-        wylosujPomiary(); // losuje wyniki pomiarów
-    }
-
-    ~Pacjent() {} // destruktor pacjenta
+    cisnienie_skurczowe = 0;
+    cisnienie_rozkurczowe = 0;
+    tetno = 0;
+    utlenienie = 0;
+    poziom_cukru = 0;
+    temperatura_ciala = 0;
+    stan = 1;
 };
 
 
-string wygenerujPesel() // funkcja do generowania numeru pesel
+// metoda losująca wzrost i wagę pacjenta
+void Pacjent::wylosujWzrost_Wage() {
+    if (wiek < 1) {
+        wzrost = rand() % 30 + 50;   // 50-80 cm
+        waga = rand() % 7 + 3;      // 3-10 kg
+    } else if (wiek < 5) {
+        wzrost = rand() % 30 + 70;  // 70-100 cm
+        waga = rand() % 10 + 12;    // 12-22 kg
+    } else if (wiek < 12) {
+        wzrost = rand() % 60 + 80;  // 80-140 cm
+        waga = rand() % 21 + 20;    // 20-41 kg
+    } else if (wiek < 18) {
+        wzrost = rand() % 50 + 130; // 130-180 cm
+        waga = rand() % 32 + 40;    // 40-72 kg
+    } else if (wiek < 65) {
+        wzrost = rand() % 50 + 155; // 155-205 cm
+        waga = rand() % 42 + 60;    // 60-102 kg
+    } else {
+        wzrost = rand() % 30 + 150; // 150-180 cm
+        waga = rand() % 32 + 55;    // 55-87 kg
+    }
+}
+
+// Metoda losująca pomiary
+void Pacjent::wylosujPomiary() {
+    pomiary.set_cS(rand() % 61 + 80);      // 80-140 mmHg
+    pomiary.set_cR(rand() % 31 + 50);      // 50-80 mmHg
+    pomiary.set_tetno(rand() % 61 + 50);   // 50-110 uderzeń/min
+    pomiary.set_utl(rand() % 11 + 90);     // 90-100% procent utlenienia
+    pomiary.set_cukier(rand() % 160 + 40); // 40-200 mg/dL
+    pomiary.set_temp(rand() % 90 + 345);   // 34.5-43.5°C (pomnożone razy 10)
+    pomiary.sprawdzStan(wiek);
+}
+
+void Pacjent::zapisz(ofstream &plik) {
+    // plik << "ID PESEL Imię Nazwisko Wiek Płeć Wzrost Waga"
+    //     << "Ciśnienie_skurczowe Ciśnienie_rozkurczowe Tętno "
+    //     << "Utlenienie Poziom_Cukru Temperatura Stan Dolegliwość\n";
+    plik << id << " " << pesel << " " << imie << " " << nazwisko << " "
+        << wiek << " " << plec << " " << wzrost << " " << waga << " "
+        << pomiary.get_cS() << " " << pomiary.get_cR() << " "
+        << pomiary.get_tetno() << " " << pomiary.get_utl() << " " << pomiary.get_cukier() << " "
+        << pomiary.get_temp() << " " << pomiary.get_stan() << " " << dolegliwosc << "\n";
+}
+
+// Konstruktor klasy Pacjent
+Pacjent::Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc): id(ID), pesel(Pesel), imie(Imie), nazwisko(Nazwisko), wiek(Wiek), dolegliwosc(Dolegliwosc) 
 {
+    plec = (imie.back() == 'a') ? "Kobieta" : "Mężczyzna"; // określa płeć na podstawie imienia
+    wylosujWzrost_Wage();
+    wylosujPomiary();
+}
+
+
+
+string wygenerujPesel() {
     string pesel = "";
-    int cyfra;
-    for (int i=0; i < 11; i++)
-    {
-        cyfra = rand() % 10;
-        pesel += to_string(cyfra); // to_string zamienia cyfrę na stringa
+    for (int i = 0; i < 11; i++) {
+        int cyfra = rand() % 10;
+        pesel += to_string(cyfra);
     }
     return pesel;
 }
@@ -296,12 +203,11 @@ int main()
 {
     srand(time(0)); // zapewnia całkowita losowość wyników
 
-    int liczba_pacjentow = rand() % 5 + 2; //Tyle pacjentów wylosuje - wylosowany pacjent będzie dodany do bazy danych jeżeli go w niej nie było albo jego wyniki i stan będą zmienione - symulacja odczytu wyników z maszyn w szpitalu
+    int liczba_pacjentow = rand() % 5 + 2; // losowanie ilości pacjentów
 
     string imiona[100] =
     {
- //Imiona kobiet kończą się literą 'a'
- 
+        //Imiona kobiet kończą się literą 'a'
         "Anna", "Maria", "Katarzyna", "Magdalena", "Agnieszka",
         "Joanna", "Barbara", "Ewa", "Krystyna", "Elżbieta",
         "Zofia", "Teresa", "Halina", "Irena", "Jadwiga",

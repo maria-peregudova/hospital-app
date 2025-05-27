@@ -3,7 +3,6 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include "sqlite3.h"
 #include "generator_pacjentow.hpp"
 
   int end=1;

@@ -7,9 +7,7 @@
 #include <ctime>
 #include "generator_pacjentow.hpp"
 
-
 using namespace std;
-
 
 void wczytajPacjentow(const string& nazwaPliku, vector<PacjentDane>& pacjenci) 
 {

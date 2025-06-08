@@ -32,7 +32,6 @@ void wczytajPacjentow(const string& nazwaPliku, vector<PacjentDane>& pacjenci)
     }
 }
 
-
 void zapiszPacjentow(const string& nazwaPliku, const vector<PacjentDane>& pacjenci) 
 {
     ofstream plik(nazwaPliku);

@@ -25,8 +25,8 @@ public:
     int get_tetno() const;
     int get_utl() const;
     int get_cukier() const;
-    int get_stan() const;
     int get_temp() const;
+    int get_stan() const;
 
     // Settery
     void set_cS(int wartosc);
@@ -44,7 +44,7 @@ public:
     Pomiary();
 
     // wirtualny destruktor
-    virtual ~Pomiary();     
+    virtual ~Pomiary(){};     
 };
 
 class Pacjent 
@@ -59,13 +59,23 @@ public:
     void wylosujWzrost_Wage();
     void wylosujPomiary();
     void zapisz(std::ofstream &plik);
-
     // konstruktor
     Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc);
 
     // wirtualny destruktor
-    virtual ~Pacjent();
+    virtual ~Pacjent(){};
 };
 
+struct PacjentDane // struktura danych pacjenta
+{
+    int id, wiek, wzrost, waga, cisnienie_skurczowe, cisnienie_rozkurczowe, tetno, utlenienie, poziom_cukru, temperatura, stan;
+    std::string pesel, imie, nazwisko, plec, dolegliwosc;
+};
+
+std::string wygenerujPesel();
+
+void wczytajPacjentow();
+
+void zapiszPacjentow();
 
 #endif // GENERATOR_PACJENTOW_HPP

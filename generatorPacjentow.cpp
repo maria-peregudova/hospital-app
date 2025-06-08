@@ -7,10 +7,7 @@
 
 using namespace std;
 
-//Destruktor pacjent
-Pacjent::~Pacjent(){};
-
-// Gettery
+// gettery
 int Pomiary::get_cS() const {
     return cisnienie_skurczowe;
 }
@@ -31,15 +28,17 @@ int Pomiary::get_cukier() const {
     return poziom_cukru;
 }
 
-int Pomiary::get_stan() const {
-    return stan;
-}
-
 int Pomiary::get_temp() const {
     return temperatura_ciala;
 }
 
-// Settery
+int Pomiary::get_stan() const {
+    return stan;
+}
+
+
+
+// settery
 void Pomiary::set_cS(int wartosc) {
     cisnienie_skurczowe = wartosc;
 }
@@ -64,7 +63,7 @@ void Pomiary::set_temp(int wartosc) {
     temperatura_ciala = wartosc;
 }
 
-// Metoda oceniająca stan na podstawie różnicy
+// metoda oceniająca stan na podstawie różnicy
 int Pomiary::ocenaStanu(double roznica) {
     if (roznica < 10) return 1;
     else if (roznica <= 20) return 2;
@@ -73,12 +72,12 @@ int Pomiary::ocenaStanu(double roznica) {
     else return 5;          
 }
 
-// Metoda sprawdzająca stan pacjenta w zależności od wieku
+// metoda sprawdzająca stan pacjenta w zależności od wieku
 void Pomiary::sprawdzStan(int wiek) {
     Zakres zakres_cS, zakres_cR, zakres_tetno, zakres_utl, zakres_cukier, zakres_temp;
     double roznica_cS = 0, roznica_cR = 0, roznica_tetno = 0, roznica_utl = 0, roznica_cukier = 0, roznica_temp = 0;
 
-    // Ustalenie zakresów dla różnych grup wiekowych
+    // ustalenie zakresów dla różnych grup wiekowych
     if (wiek < 1) { // niemowlę
         zakres_cS = {60, 90}; zakres_cR = {30, 60}; zakres_tetno = {100, 160};
         zakres_utl = {90, 100}; zakres_temp = {360, 375}; zakres_cukier = {60, 100};
@@ -96,7 +95,7 @@ void Pomiary::sprawdzStan(int wiek) {
         zakres_utl = {93, 100}; zakres_temp = {355, 380}; zakres_cukier = {70, 140};
     }
 
-    // Obliczanie odchyleń od normy dla każdego parametru
+    // obliczanie odchyleń od normy dla każdego parametru
     if (cisnienie_skurczowe < zakres_cS.min) roznica_cS = zakres_cS.min - cisnienie_skurczowe;
     else if (cisnienie_skurczowe > zakres_cS.max) roznica_cS = cisnienie_skurczowe - zakres_cS.max;
 
@@ -115,7 +114,7 @@ void Pomiary::sprawdzStan(int wiek) {
     if (temperatura_ciala < zakres_temp.min) roznica_temp = zakres_temp.min - temperatura_ciala;
     else if (temperatura_ciala > zakres_temp.max) roznica_temp = temperatura_ciala - zakres_temp.max;
 
-    // Ocena stanu
+    // ocena stanu
     stan = 1;
     if (ocenaStanu(roznica_cS) > stan) stan = ocenaStanu(roznica_cS);
     if (ocenaStanu(roznica_cR) > stan) stan = ocenaStanu(roznica_cR);
@@ -136,9 +135,6 @@ Pomiary::Pomiary()
     temperatura_ciala = 0;
     stan = 1;
 };
-
-//Destruktor pomiary
-Pomiary::~Pomiary(){};
 
 
 // metoda losująca wzrost i wagę pacjenta
@@ -164,8 +160,9 @@ void Pacjent::wylosujWzrost_Wage() {
     }
 }
 
-// Metoda losująca pomiary
-void Pacjent::wylosujPomiary() {
+// metoda losująca pomiary
+void Pacjent::wylosujPomiary() 
+{
     pomiary.set_cS(rand() % 61 + 80);      // 80-140 mmHg
     pomiary.set_cR(rand() % 31 + 50);      // 50-80 mmHg
     pomiary.set_tetno(rand() % 61 + 50);   // 50-110 uderzeń/min
@@ -186,7 +183,7 @@ void Pacjent::zapisz(ofstream &plik) {
         << pomiary.get_temp() << " " << pomiary.get_stan() << " " << dolegliwosc << "\n";
 }
 
-// Konstruktor klasy Pacjent
+// konstruktor klasy Pacjent
 Pacjent::Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc): id(ID), pesel(Pesel), imie(Imie), nazwisko(Nazwisko), wiek(Wiek), dolegliwosc(Dolegliwosc) 
 {
     plec = (imie.back() == 'a') ? "Kobieta" : "Mężczyzna"; // określa płeć na podstawie imienia
@@ -194,9 +191,9 @@ Pacjent::Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwis
     wylosujPomiary();
 }
 
-
-
-string wygenerujPesel() {
+// funkcja generująca Pesel
+string wygenerujPesel() 
+{
     string pesel = "";
     for (int i = 0; i < 11; i++) {
         int cyfra = rand() % 10;
@@ -205,95 +202,95 @@ string wygenerujPesel() {
     return pesel;
 }
 
-int main()
-{
-    srand(time(0)); // zapewnia całkowita losowość wyników
+// int main()
+// {
+//     srand(time(0)); // zapewnia całkowita losowość wyników
 
-    int liczba_pacjentow = rand() % 5 + 2; // losowanie ilości pacjentów
+//     int liczba_pacjentow = rand() % 5 + 2; // losowanie ilości pacjentów
 
-    string imiona[100] =
-    {
-        //Imiona kobiet kończą się literą 'a'
-        "Anna", "Maria", "Katarzyna", "Magdalena", "Agnieszka",
-        "Joanna", "Barbara", "Ewa", "Krystyna", "Elżbieta",
-        "Zofia", "Teresa", "Halina", "Irena", "Jadwiga",
-        "Danuta", "Grażyna", "Beata", "Urszula", "Małgorzata",
-        "Natalia", "Patrycja", "Karolina", "Sylwia", "Paulina",
-        "Dorota", "Martyna", "Alicja", "Justyna", "Weronika",
-        "Milena", "Izabela", "Renata", "Gabriela", "Julia",
-        "Emilia", "Olga", "Lucyna", "Aneta", "Wioletta",
-        "Jan", "Andrzej", "Piotr", "Krzysztof", "Stanisław",
-        "Tomasz", "Paweł", "Józef", "Marcin", "Marek",
-        "Michał", "Grzegorz", "Jerzy", "Tadeusz", "Adam",
-        "Zbigniew", "Ryszard", "Dariusz", "Wojciech", "Henryk",
-        "Roman", "Kazimierz", "Edward", "Robert", "Sebastian",
-        "Mateusz", "Antoni", "Julian", "Ignacy", "Oskar",
-        "Bartosz", "Łukasz", "Hubert", "Karol", "Kamil",
-        "Przemysław", "Daniel", "Konrad", "Szymon", "Damian",
-        "Cezary", "Filip", "Maciej", "Mariusz", "Arkadiusz",
-        "Patryk", "Rafał", "Norbert", "Tymoteusz", "Waldemar",
-        "Lech", "Bogdan", "Borys", "Witold", "Albert"
-    };
+//     string imiona[100] =
+//     {
+//         //Imiona kobiet kończą się literą 'a'
+//         "Anna", "Maria", "Katarzyna", "Magdalena", "Agnieszka",
+//         "Joanna", "Barbara", "Ewa", "Krystyna", "Elżbieta",
+//         "Zofia", "Teresa", "Halina", "Irena", "Jadwiga",
+//         "Danuta", "Grażyna", "Beata", "Urszula", "Małgorzata",
+//         "Natalia", "Patrycja", "Karolina", "Sylwia", "Paulina",
+//         "Dorota", "Martyna", "Alicja", "Justyna", "Weronika",
+//         "Milena", "Izabela", "Renata", "Gabriela", "Julia",
+//         "Emilia", "Olga", "Lucyna", "Aneta", "Wioletta",
+//         "Jan", "Andrzej", "Piotr", "Krzysztof", "Stanisław",
+//         "Tomasz", "Paweł", "Józef", "Marcin", "Marek",
+//         "Michał", "Grzegorz", "Jerzy", "Tadeusz", "Adam",
+//         "Zbigniew", "Ryszard", "Dariusz", "Wojciech", "Henryk",
+//         "Roman", "Kazimierz", "Edward", "Robert", "Sebastian",
+//         "Mateusz", "Antoni", "Julian", "Ignacy", "Oskar",
+//         "Bartosz", "Łukasz", "Hubert", "Karol", "Kamil",
+//         "Przemysław", "Daniel", "Konrad", "Szymon", "Damian",
+//         "Cezary", "Filip", "Maciej", "Mariusz", "Arkadiusz",
+//         "Patryk", "Rafał", "Norbert", "Tymoteusz", "Waldemar",
+//         "Lech", "Bogdan", "Borys", "Witold", "Albert"
+//     };
 
-    string nazwiska[100] =
-    {
-        "Kowalski", "Nowak", "Wiśniewski", "Wójcik", "Kowalczyk",
-        "Kamiński", "Lewandowski", "Zieliński", "Szymański", "Woźniak",
-        "Dąbrowski", "Kozłowski", "Jankowski", "Mazur", "Wojciechowski",
-        "Kwiatkowski", "Kaczmarek", "Piotrowski", "Grabowski", "Zając",
-        "Król", "Wieczorek", "Jabłoński", "Wróbel", "Pawłowski",
-        "Michalski", "Nowicki", "Adamczyk", "Dudek", "Sikora",
-        "Walczak", "Baran", "Rutkowski", "Szewczyk", "Olszewski",
-        "Bąk", "Szymańska", "Lis", "Makowski", "Chmielewski",
-        "Szulc", "Brzeziński", "Czarnecki", "Sawicki", "Sokołowski",
-        "Urbański", "Kubiak", "Kucharski", "Tomczak", "Jaworski",
-        "Malinowski", "Piekarski", "Głowacki", "Czerwiński", "Sikorski",
-        "Włodarczyk", "Marciniak", "Jastrzębski", "Zarzycki", "Rogowski",
-        "Maj", "Sobczak", "Tomaszewski", "Cieślak", "Kubicki",
-        "Kołodziej", "Milewski", "Szczepański", "Leszczyński", "Borowski",
-        "Borkowski", "Majewski", "Urban", "Pawlak", "Kopeć",
-        "Mróz", "Orłowski", "Musiał", "Wrona", "Brodziński",
-        "Zawadzki", "Stefański", "Andrzejewski", "Błaszczyk", "Strzelczyk",
-        "Marcinkowski", "Chojnacki", "Słowik", "Drozd", "Wilk",
-        "Bednarek", "Białek", "Michalik", "Gajda", "Jóźwiak"
-    };
+//     string nazwiska[100] =
+//     {
+//         "Kowalski", "Nowak", "Wiśniewski", "Wójcik", "Kowalczyk",
+//         "Kamiński", "Lewandowski", "Zieliński", "Szymański", "Woźniak",
+//         "Dąbrowski", "Kozłowski", "Jankowski", "Mazur", "Wojciechowski",
+//         "Kwiatkowski", "Kaczmarek", "Piotrowski", "Grabowski", "Zając",
+//         "Król", "Wieczorek", "Jabłoński", "Wróbel", "Pawłowski",
+//         "Michalski", "Nowicki", "Adamczyk", "Dudek", "Sikora",
+//         "Walczak", "Baran", "Rutkowski", "Szewczyk", "Olszewski",
+//         "Bąk", "Szymańska", "Lis", "Makowski", "Chmielewski",
+//         "Szulc", "Brzeziński", "Czarnecki", "Sawicki", "Sokołowski",
+//         "Urbański", "Kubiak", "Kucharski", "Tomczak", "Jaworski",
+//         "Malinowski", "Piekarski", "Głowacki", "Czerwiński", "Sikorski",
+//         "Włodarczyk", "Marciniak", "Jastrzębski", "Zarzycki", "Rogowski",
+//         "Maj", "Sobczak", "Tomaszewski", "Cieślak", "Kubicki",
+//         "Kołodziej", "Milewski", "Szczepański", "Leszczyński", "Borowski",
+//         "Borkowski", "Majewski", "Urban", "Pawlak", "Kopeć",
+//         "Mróz", "Orłowski", "Musiał", "Wrona", "Brodziński",
+//         "Zawadzki", "Stefański", "Andrzejewski", "Błaszczyk", "Strzelczyk",
+//         "Marcinkowski", "Chojnacki", "Słowik", "Drozd", "Wilk",
+//         "Bednarek", "Białek", "Michalik", "Gajda", "Jóźwiak"
+//     };
 
-    string dolegliwosci[50] =
-    {
-        "Grypa", "Angina", "Zapalenie płuc", "COVID-19", "Astma",
-        "Cukrzyca", "Choroba wieńcowa", "Zawał serca", "Nadciśnienie", "Nowotwór",
-        "Złamanie ręki", "Złamanie nogi", "Złamanie biodra", "Rana cięta", "Rana szarpana",
-        "Oparzenie", "Odleżyny", "Reumatoidalne zapalenie stawów", "Osteoporoza", "Skolioza",
-        "Zapalenie ucha", "Zatrucie pokarmowe", "Kamica nerkowa", "Wrzody żołądka", "Alzheimer",
-        "Parkinson", "Migrena", "Depresja", "Nerwica", "Bezsenność",
-        "Padaczka", "Choroba Crohna", "Hemoroidy", "Reumatyzm", "Stwardnienie rozsiane",
-        "Zespół Downa", "Autyzm", "Biegunka", "Zaparcia", "Zapalenie gardła",
-        "Angina ropna", "Ospa", "Różyczka", "Świnka", "Zapalenie spojówek",
-        "Zawał mózgu", "Gruźlica", "Zapalenie oskrzeli", "Zatrucie chemiczne", "Wstrząśnienie mózgu"
-    };
+//     string dolegliwosci[50] =
+//     {
+//         "Grypa", "Angina", "Zapalenie płuc", "COVID-19", "Astma",
+//         "Cukrzyca", "Choroba wieńcowa", "Zawał serca", "Nadciśnienie", "Nowotwór",
+//         "Złamanie ręki", "Złamanie nogi", "Złamanie biodra", "Rana cięta", "Rana szarpana",
+//         "Oparzenie", "Odleżyny", "Reumatoidalne zapalenie stawów", "Osteoporoza", "Skolioza",
+//         "Zapalenie ucha", "Zatrucie pokarmowe", "Kamica nerkowa", "Wrzody żołądka", "Alzheimer",
+//         "Parkinson", "Migrena", "Depresja", "Nerwica", "Bezsenność",
+//         "Padaczka", "Choroba Crohna", "Hemoroidy", "Reumatyzm", "Stwardnienie rozsiane",
+//         "Zespół Downa", "Autyzm", "Biegunka", "Zaparcia", "Zapalenie gardła",
+//         "Angina ropna", "Ospa", "Różyczka", "Świnka", "Zapalenie spojówek",
+//         "Zawał mózgu", "Gruźlica", "Zapalenie oskrzeli", "Zatrucie chemiczne", "Wstrząśnienie mózgu"
+//     };
 
 
-    ofstream plik("pacjenci.txt");
-    if(!plik)
-    {
-        cerr << "Nie ma takiego pliku!\n";
-        return 1;
-    }
+//     ofstream plik("pacjenci.txt");
+//     if(!plik)
+//     {
+//         cerr << "Nie ma takiego pliku!\n";
+//         return 1;
+//     }
 
-    for (int i = 1; i <= liczba_pacjentow; i++)
-    {
-        string pesel = wygenerujPesel();
-        int wiek = rand() % 121;
-        string imie = imiona[rand() % 100];
-        string nazwisko = nazwiska[rand() % 100];
-        string dolegliwosc = dolegliwosci[rand() % 50];
+//     for (int i = 1; i <= liczba_pacjentow; i++)
+//     {
+//         string pesel = wygenerujPesel();
+//         int wiek = rand() % 121;
+//         string imie = imiona[rand() % 100];
+//         string nazwisko = nazwiska[rand() % 100];
+//         string dolegliwosc = dolegliwosci[rand() % 50];
 
-        Pacjent pacjent(i, pesel, imie, nazwisko, wiek, dolegliwosc);
+//         Pacjent pacjent(i, pesel, imie, nazwisko, wiek, dolegliwosc);
 
-        pacjent.zapisz(plik);
-    }
+//         pacjent.zapisz(plik);
+//     }
     
-    plik.close();
-    cout << "Zapisano dane pacjentów do pliku pacjenci.txt\n";
-    return 0;
-}
+//     plik.close();
+//     cout << "Zapisano dane pacjentów do pliku pacjenci.txt\n";
+//     return 0;
+// }

@@ -44,7 +44,7 @@ public:
     Pomiary();
 
     // wirtualny destruktor
-    virtual ~Pomiary(){};     
+    virtual ~Pomiary();     
 };
 
 class Pacjent 
@@ -64,7 +64,7 @@ public:
     Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc);
 
     // wirtualny destruktor
-    virtual ~Pacjent(){};
+    virtual ~Pacjent();
 };
 
 

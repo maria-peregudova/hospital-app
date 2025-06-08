@@ -7,6 +7,9 @@
 
 using namespace std;
 
+//Destruktor 
+Pomiary::~Pomiary(){};
+
 // Gettery
 int Pomiary::get_cS() const {
     return cisnienie_skurczowe;

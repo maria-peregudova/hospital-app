@@ -7,8 +7,8 @@
 
 using namespace std;
 
-//Destruktor 
-Pomiary::~Pomiary(){};
+//Destruktor pacjent
+Pacjent::~Pacjent(){};
 
 // Gettery
 int Pomiary::get_cS() const {
@@ -136,6 +136,9 @@ Pomiary::Pomiary()
     temperatura_ciala = 0;
     stan = 1;
 };
+
+//Destruktor pomiary
+Pomiary::~Pomiary(){};
 
 
 // metoda losująca wzrost i wagę pacjenta

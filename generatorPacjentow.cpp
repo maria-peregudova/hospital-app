@@ -155,7 +155,7 @@ string Pacjent::get_lekarz() const {
 
 // Setter Pacjent
 void Pacjent::set_pacjent(int Id, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek,
-std::string Plec, int Wzrost, int Waga, int Cisk, int Ciroz, int Tetno, int Utlenienie, int Cukier, int Temperatura, int Stan, std::string Dolegliwosc, int Pokoj, std::string Lekarz_nazwisko)
+std::string Plec, int Wzrost, int Waga, int Cisk, int Ciroz, int Tetno, int Utlenienie, int Cukier, int Temperatura, int Stan, std::string Dolegliwosc)
 {
     id = Id;
     pesel = Pesel;

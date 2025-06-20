@@ -51,16 +51,41 @@ class Pacjent
 {
 protected: // zmienne chronione przed dostepem publicznym
     int id, wiek, wzrost, waga;
-    std::string imie, nazwisko, plec, pesel, dolegliwosc;
+    std::string imie, nazwisko, plec, pesel, dolegliwosc, lekarz;
     Pomiary pomiary;
 
 public:
+
+//getery
+int get_id(){return id;}
+int get_wiek(){return wiek;}
+int get_wzrost(){return wzrost;}
+int get_waga(){return waga;}
+string get_imie(){return imie;}
+string get_nazwisko(){return nazwisko;}
+string get_plec(){return plec;}
+string get_pesel(){return pesel;}
+string get_dolegliwosc(){return dolegliwosc;}
+string get_lekarz(){return lekarz;}
+
+//setery
+void set_id(int wartosc){id = wartosc};
+void set_wiek(int wartosc){wiek = wartosc};
+void set_wzrost(int wartosc){wzrost = wartosc};
+void set_waga(int wartosc){waga = wartosc};
+void set_imie(int wartosc){imie = wartosc};
+void set_nazwisko(int wartosc){nazwisko = wartosc};
+void set_plec(int wartosc){plec = wartosc};
+void set_pesel(int wartosc){pesel = wartosc};
+void set_dolegliwosc(int wartosc){dolegliwosc = wartosc};
+void set_lekarz(int wartosc){lekarz = wartosc};
+
     // metody
     void wylosujWzrost_Wage();
     void wylosujPomiary();
     void zapisz(std::ofstream &plik);
     // konstruktor
-    Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc);
+    Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc. std::string Lekarz);
 
     // wirtualny destruktor
     virtual ~Pacjent(){};

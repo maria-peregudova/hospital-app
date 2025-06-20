@@ -136,6 +136,51 @@ Pomiary::Pomiary()
     stan = 1;
 };
 
+//Gettery Pacjent
+string Pacjent::get_imie() const {
+    return imie;
+}
+string Pacjent::get_nazwisko() const {
+    return nazwisko;
+}
+int Pacjent::get_stan() const {
+    return pomiary.get_stan();
+}
+int Pacjent::get_pokoj() const {
+    return pokoj;
+}
+string Pacjent::get_lekarz() const {
+    return lekarz;
+}
+
+// Setter Pacjent
+void Pacjent::set_pacjent(int Id, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek,
+std::string Plec, int Wzrost, int Waga, int Cisk, int Ciroz, int Tetno, int Utlenienie, int Cukier, int Temperatura, int Stan, std::string Dolegliwosc, int Pokoj, std::string Lekarz_nazwisko)
+{
+    id = Id;
+    pesel = Pesel;
+    imie = Imie;
+    nazwisko = Nazwisko;
+    wiek = Wiek;
+    plec = Plec;
+    wzrost = Wzrost;
+    waga = Waga;
+    dolegliwosc = Dolegliwosc;
+
+    pomiary.set_cS(Cisk);
+    pomiary.set_cR(Ciroz);
+    pomiary.set_tetno(Tetno);
+    pomiary.set_utl(Utlenienie);
+    pomiary.set_cukier(Cukier);
+    pomiary.set_temp(Temperatura);
+    pomiary.sprawdzStan(Wiek);
+
+    if(id%2 == 0){pokoj = 1;}
+    else{pokoj = 2;}
+    if(id%3 == 0){lekarz = "Kowalski";}
+    else if(id%3 == 1){lekarz = "Lewandowski";}
+    else{lekarz = "Wodecki";}
+};
 
 // metoda losująca wzrost i wagę pacjenta
 void Pacjent::wylosujWzrost_Wage() {

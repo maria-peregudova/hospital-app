@@ -52,11 +52,22 @@ public:
 class Pacjent 
 {
 protected: // zmienne chronione przed dostepem publicznym
-    int id, wiek, wzrost, waga;
-    std::string imie, nazwisko, plec, pesel, dolegliwosc;
+    int id, wiek, wzrost, waga, pokoj;
+    std::string imie, nazwisko, plec, pesel, dolegliwosc, lekarz;
     Pomiary pomiary;
 
 public:
+    // Gettery - const bo są stałe
+    string get_imie() const;
+    string get_nazwisko() const;
+    int get_stan() const;
+    int get_pokoj() const;
+    string get_lekarz() const;
+
+    // Settery
+    void set_pacjent(int Id, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Plec, int Wzrost, int Waga, int Cisk, int Ciroz, int Tetno, int Utlenienie, int Cukier, int Temperatura, int Stan, std::string Dolegliwosc, int Pokoj, std::string Lekarz);
+
+
     // metody
     void wylosujWzrost_Wage();
     void wylosujPomiary();

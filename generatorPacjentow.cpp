@@ -137,6 +137,9 @@ Pomiary::Pomiary()
 };
 
 //Gettery Pacjent
+int Pacjent::get_id() const {
+    return id;
+}
 string Pacjent::get_imie() const {
     return imie;
 }

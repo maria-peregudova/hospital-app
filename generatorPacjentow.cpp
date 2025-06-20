@@ -172,7 +172,8 @@ void Pacjent::wylosujPomiary()
     pomiary.sprawdzStan(wiek);
 }
 
-void Pacjent::zapisz(ofstream &plik) {
+void Pacjent::zapisz(ofstream &plik) 
+{
     // plik << "ID PESEL Imię Nazwisko Wiek Płeć Wzrost Waga"
     //     << "Ciśnienie_skurczowe Ciśnienie_rozkurczowe Tętno "
     //     << "Utlenienie Poziom_Cukru Temperatura Stan Dolegliwość\n";
@@ -182,6 +183,7 @@ void Pacjent::zapisz(ofstream &plik) {
         << pomiary.get_tetno() << " " << pomiary.get_utl() << " " << pomiary.get_cukier() << " "
         << pomiary.get_temp() << " " << pomiary.get_stan() << " " << dolegliwosc << "\n";
 }
+
 
 // konstruktor klasy Pacjent
 Pacjent::Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc): id(ID), pesel(Pesel), imie(Imie), nazwisko(Nazwisko), wiek(Wiek), dolegliwosc(Dolegliwosc) 

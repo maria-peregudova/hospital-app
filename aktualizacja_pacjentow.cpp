@@ -1,18 +1,87 @@
-#include <iostream> // cin i cout
-#include <cstdlib> // rand() i srand()
-#include <fstream> // działania na plikach
-#include <string> // stringi i ich metody np. back()
-#include <ctime> // time()
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <ctime>
 #include "generator_pacjentow.hpp"
-
 
 using namespace std;
 
-int generujPacjentow()
+void wczytajPacjentow(const string& nazwaPliku, vector<PacjentDane>& pacjenci) 
 {
-    srand(time(0)); // zapewnia całkowita losowość wyników
+    ifstream plik(nazwaPliku);
+    string linia;
 
-    int liczba_pacjentow = rand() % 5 + 2; // losowanie ilości pacjentów
+    if (!plik) 
+    {
+        cerr << "Nie można otworzyć pliku do odczytu.\n";
+        return;
+    }
+
+    while (getline(plik, linia)) 
+    {
+        istringstream iss(linia);
+        PacjentDane p;
+        iss >> p.id >> p.pesel >> p.imie >> p.nazwisko >> p.wiek >> p.plec >> p.wzrost >> p.waga
+        >> p.cisnienie_skurczowe >> p.cisnienie_rozkurczowe >> p.tetno >> p.utlenienie
+        >> p.poziom_cukru >> p.temperatura >> p.stan;
+        getline(iss >> ws, p.dolegliwosc); // ws - odczytuje do końca linii (pomijanie znaków białych (spacji) przy nazwie choroby)
+        pacjenci.push_back(p);
+    }
+}
+
+void zapiszPacjentow(const string& nazwaPliku, const vector<PacjentDane>& pacjenci) 
+{
+    ofstream plik(nazwaPliku);
+
+    for (const auto& p : pacjenci) 
+    {
+        plik << p.id << " " << p.pesel << " " << p.imie << " " << p.nazwisko << " " << p.wiek << " " << p.plec << " "
+        << p.wzrost << " " << p.waga << " " << p.cisnienie_skurczowe << " " << p.cisnienie_rozkurczowe << " "
+        << p.tetno << " " << p.utlenienie << " " << p.poziom_cukru << " " << p.temperatura << " "
+        << p.stan << " " << p.dolegliwosc << '\n';
+    }
+}
+
+int aktualizujPacjentow() 
+{
+
+    srand(time(0));
+
+    vector<PacjentDane> pacjenci;
+    const string nazwaPliku = "pacjenci.txt";
+
+    wczytajPacjentow(nazwaPliku, pacjenci);
+
+    for (auto& p : pacjenci) {
+        Pomiary npomiary;
+
+        npomiary.set_cS(rand() % 61 + 80);  // 80–140 mmHg
+        p.cisnienie_skurczowe = npomiary.get_cS();
+
+        npomiary.set_cR(rand() % 31 + 50);  // 50–80 mmHg
+        p.cisnienie_rozkurczowe = npomiary.get_cR();
+
+        npomiary.set_tetno(rand() % 61 + 50); // 50–110 uderzeń/min
+        p.tetno = npomiary.get_tetno();
+
+        npomiary.set_cukier(rand() % 160 + 40); // 40–200 mg/dL
+        p.poziom_cukru = npomiary.get_cukier();
+
+        npomiary.set_utl(p.utlenienie);
+
+        npomiary.set_temp(rand() % 90 + 345); // 34.5–43.5 °C *10
+        p.temperatura = npomiary.get_temp();
+
+        npomiary.sprawdzStan(p.wiek);
+        p.stan = npomiary.get_stan();
+    }
+
+    zapiszPacjentow(nazwaPliku, pacjenci);
+
+    int liczba_nowych_pacjentow = rand() % 3; // losowanie ilości nowych pacjentów
 
     string imiona[100] =
     {
@@ -76,27 +145,33 @@ int generujPacjentow()
     };
 
 
-    ofstream plik("pacjenci.txt");
-    if(!plik)
+    if (liczba_nowych_pacjentow != 0) 
     {
-        cerr << "Nie ma takiego pliku!\n";
-        return 1;
+
+        ofstream plik("pacjenci.txt", ios::app);
+        if(!plik)
+        {
+            cerr << "Nie ma takiego pliku!\n";
+            return 1;
+        }
+
+        int id = pacjenci.size() + 1;
+        liczba_nowych_pacjentow += pacjenci.size();
+        for (int i = id; i <= liczba_nowych_pacjentow; i++)
+        {
+            string pesel = wygenerujPesel();
+            int wiek = rand() % 121;
+            string imie = imiona[rand() % 100];
+            string nazwisko = nazwiska[rand() % 100];
+            string dolegliwosc = dolegliwosci[rand() % 50];
+
+            Pacjent nowy_pacjent(i, pesel, imie, nazwisko, wiek, dolegliwosc);
+
+            nowy_pacjent.zapisz(plik);
+        }
     }
 
-    for (int i = 1; i <= liczba_pacjentow; i++)
-    {
-        string pesel = wygenerujPesel();
-        int wiek = rand() % 121;
-        string imie = imiona[rand() % 100];
-        string nazwisko = nazwiska[rand() % 100];
-        string dolegliwosc = dolegliwosci[rand() % 50];
 
-        Pacjent pacjent(i, pesel, imie, nazwisko, wiek, dolegliwosc);
-
-        pacjent.zapisz(plik);
-    }
-    
-    plik.close();
-    cout << "Zapisano dane pacjentów do pliku pacjenci.txt\n";
+    cout << "Zaktualizowano pomiary wszystkich pacjentów.\n";
     return 0;
 }

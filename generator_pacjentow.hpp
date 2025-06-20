@@ -9,8 +9,10 @@
 
 struct Zakres // struktura zakresu do wykorzystywania w obliczaniu pomiarów 
 {
-    double min;
-    double max;
+    int min;
+    int max;
+
+    bool wZakresie(int wartosc) const;
 };
 
 class Pomiary 
@@ -55,34 +57,11 @@ protected: // zmienne chronione przed dostepem publicznym
     Pomiary pomiary;
 
 public:
-
-//getery
-int get_id(){return id;}
-int get_wiek(){return wiek;}
-int get_wzrost(){return wzrost;}
-int get_waga(){return waga;}
-std::string get_imie(){return imie;}
-std::string get_nazwisko(){return nazwisko;}
-std::string get_plec(){return plec;}
-std::string get_pesel(){return pesel;}
-std::string get_dolegliwosc(){return dolegliwosc;}
-std::string get_lekarz(){return lekarz;}
-
-//setery
-void set_id(int wartosc){id = wartosc};
-void set_wiek(int wartosc){wiek = wartosc};
-void set_wzrost(int wartosc){wzrost = wartosc};
-void set_waga(int wartosc){waga = wartosc};
-void set_imie(std::string wartosc){imie = wartosc};
-void set_nazwisko(std::string wartosc){nazwisko = wartosc};
-void set_plec(std::string wartosc){plec = wartosc};
-void set_pesel(std::string wartosc){pesel = wartosc};
-void set_dolegliwosc(std::string wartosc){dolegliwosc = wartosc};
-
     // metody
     void wylosujWzrost_Wage();
     void wylosujPomiary();
     void zapisz(std::ofstream &plik);
+    void dopisz(std::ofstream &plik);
     // konstruktor
     Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwisko, int Wiek, std::string Dolegliwosc);
 
@@ -101,5 +80,9 @@ std::string wygenerujPesel();
 void wczytajPacjentow();
 
 void zapiszPacjentow();
+
+int generujPacjentow();
+int aktualizujPacjentow();
+int sprawdzeniePoprawnosci();
 
 #endif // GENERATOR_PACJENTOW_HPP

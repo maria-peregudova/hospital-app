@@ -96,4 +96,8 @@ int generujPacjentow();
 int aktualizujPacjentow();
 int sprawdzeniePoprawnosci();
 
+std::vector <std::string> split_text(const std::string &text, char delimiter);
+int wczytaj(Pacjent *tab);
+void search(Pacjent *tab);
+
 #endif // GENERATOR_PACJENTOW_HPP

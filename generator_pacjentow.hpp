@@ -58,6 +58,7 @@ protected: // zmienne chronione przed dostepem publicznym
 
 public:
     // Gettery - const bo są stałe
+    int get_id() const;
     string get_imie() const;
     string get_nazwisko() const;
     int get_stan() const;

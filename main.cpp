@@ -16,6 +16,7 @@ int main()
         cout << "1. Generuj Pacjentów" << endl;
         cout << "2. Aktualizuj Pacjentów" << endl;
         cout << "3. Sprawdź poprawność parametrów Pacjentów" << endl;
+        cout << "4. Uruchom funkcję Search - wyszukaj pacjentów o zadanych cechach" << endl;
         cout << "0. Koniec programu" << endl;
         cout << "Wybierz operację: " << endl;
         cin >> wybor;
@@ -32,6 +33,7 @@ int main()
             sprawdzeniePoprawnosci();
             break;
         case 4:
+            
             break;
         case 5:
             break;

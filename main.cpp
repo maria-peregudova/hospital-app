@@ -3,6 +3,8 @@
 #include "generator_pacjentow.hpp"
 
 using namespace std;
+const int ile = 20;
+Pacjent tab[ile];
 
 int main()
 {
@@ -33,7 +35,10 @@ int main()
             sprawdzeniePoprawnosci();
             break;
         case 4:
-            
+            std::cout<<msg_0;
+            std::cin>>end;
+            // TU potrzebne odczytanie z pliku, które znajduje się w .hpp
+            search(tab);
             break;
         case 5:
             break;

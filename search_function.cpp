@@ -11,6 +11,7 @@
   const char* msg_01 = "Wybierz po jakim parametrze chcesz wyszukać:\n imie - 1 \n nazwisko - 2 \n stan - 3 \n pokój - 4 \n opiekujący się pacjentem Lekarz(nazwisko) - 5 \n";
   const char* msg_001 = "Wprowadź imię albo jego fragment:\n";
   const char* msg_0001 = "Wprowadź nazwisko albo jego fragment:\n";
+const char* msg_00001 = "Wprowadź pesel albo jego fragment:\n";
   const char* msg_002 = "Wprowadź stan pacjentów, którzych chcesz znaleźć. Uwaga! Stan -  1-5\n";
   const char* msg_003 = "Wprowadź numer pokoju, w którym chcesz znaleźć pacjentów. Uwaga! Pokoje -  1-2\n";
 const int ile = 10;
@@ -38,10 +39,11 @@ int wczytaj(Pacjent *tab){
     while(std::getline(file, line)){
         tokens = split_text(line, ' ');
         tab[count].set_id(std::stoi(tokens[0]));
-	tab[count].set_imie(tokens[1]);
-        tab[count].set_nazwisko(tokens[2]);
-	tab[count].set_stan(std::stoi(tokens[3]));
-        tab[count].set_lekarz(tokens[4]);
+	    tab[count].set_pesel(tokens[1]);
+	tab[count].set_imie(tokens[2]);
+        tab[count].set_nazwisko(tokens[3]);
+	tab[count].set_stan(std::stoi(tokens[4]));
+        tab[count].set_lekarz(tokens[5]);
         count++;
     }
     file.close();

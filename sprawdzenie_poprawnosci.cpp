@@ -9,29 +9,6 @@
 
 using namespace std;
 
-void wczytajPacjentow(const string& nazwaPliku, vector<PacjentDane>& pacjenci) 
-{
-    ifstream plik(nazwaPliku);
-    string linia;
-
-    if (!plik) 
-    {
-        cerr << "Nie można otworzyć pliku do odczytu.\n";
-        return;
-    }
-
-    while (getline(plik, linia)) 
-    {
-        istringstream iss(linia);
-        PacjentDane p;
-        iss >> p.id >> p.pesel >> p.imie >> p.nazwisko >> p.wiek >> p.plec >> p.wzrost >> p.waga
-        >> p.cisnienie_skurczowe >> p.cisnienie_rozkurczowe >> p.tetno >> p.utlenienie
-        >> p.poziom_cukru >> p.temperatura >> p.stan;
-        getline(iss >> ws, p.dolegliwosc); // ws - odczytuje do końca linii (pomijanie znaków białych (spacji) przy nazwie choroby)
-        pacjenci.push_back(p);
-    }
-}
-
 bool Zakres::wZakresie(int wartosc) const
 {
   if (wartosc >= min && wartosc <= max)
@@ -112,19 +89,6 @@ void sprawdzPoprawnoscParametrow(vector<PacjentDane>& pacjenci, ofstream& raport
     cout << "Brak pacjentów z nieprawidłowymi parametrami.";
     raport << "Brak pacjentów z nieprawidłowymi parametrami.";
   }
-}
-
-void zapiszPacjentow(const string& nazwaPliku, const vector<PacjentDane>& pacjenci) 
-{
-    ofstream plik(nazwaPliku);
-
-    for (const auto& p : pacjenci) 
-    {
-        plik << p.id << " " << p.pesel << " " << p.imie << " " << p.nazwisko << " " << p.wiek << " " << p.plec << " "
-        << p.wzrost << " " << p.waga << " " << p.cisnienie_skurczowe << " " << p.cisnienie_rozkurczowe << " "
-        << p.tetno << " " << p.utlenienie << " " << p.poziom_cukru << " " << p.temperatura << " "
-        << p.stan << " " << p.dolegliwosc << '\n';
-    }
 }
 
 int sprawdzeniePoprawnosci() 

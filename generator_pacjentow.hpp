@@ -6,7 +6,7 @@
 #include <fstream> // działania na plikach
 #include <string> // stringi i ich metody np. back()
 #include <ctime> // time()
-#include <vector> // dodaje vectory 
+#include <vector> // dodaje vectory
 
 struct Zakres // struktura zakresu do wykorzystywania w obliczaniu pomiarów 
 {
@@ -97,9 +97,8 @@ struct PacjentDane // struktura danych pacjenta
 
 std::string wygenerujPesel();
 
-void wczytajPacjentow();
-
-void zapiszPacjentow();
+void wczytajPacjentow(const std::string& nazwaPliku, std::vector<PacjentDane>& pacjenci);
+void zapiszPacjentow(const std::string& nazwaPliku, const std::vector<PacjentDane>& pacjenci);
 
 int generujPacjentow();
 int aktualizujPacjentow();
@@ -108,15 +107,5 @@ int sprawdzeniePoprawnosci();
 std::vector <std::string> split_text(const std::string &text, char delimiter);
 int wczytaj(Pacjent *tab);
 void search(Pacjent *tab);
-
-const char* msg_0 = "Aby uruchomić funkcję wyszukiwania wybierz 1\nAby zakończyć działanie programu wybierz 0\n";
-const char* msg_exit = " Chcę wyjść z funkcji poszukującej - -1\n";
-const char* msg_01 = "Wybierz po jakim parametrze chcesz wyszukać:\n imie - 1 \n nazwisko - 2 \n stan - 3 \n pokój - 4 \n opiekujący się pacjentem Lekarz(nazwisko) - 5 \n";
-const char* msg_001 = "Wprowadź imię albo jego fragment:\n";
-const char* msg_0001 = "Wprowadź nazwisko albo jego fragment:\n";
-const char* msg_00001 = "Wprowadź pesel albo jego fragment:\n";
-const char* msg_002 = "Wprowadź stan pacjentów, którzych chcesz znaleźć. Uwaga! Stan -  1-5\n";
-const char* msg_003 = "Wprowadź numer pokoju, w którym chcesz znaleźć pacjentów. Uwaga! Pokoje -  1-2\n";
-
 
 #endif // GENERATOR_PACJENTOW_HPP

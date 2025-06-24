@@ -3,6 +3,7 @@
 #include "generator_pacjentow.hpp"
 
 using namespace std;
+
 const int ile = 20;
 Pacjent tab[ile];
 
@@ -11,6 +12,7 @@ int main()
     int wybor;
     bool dziala = true;
     string nazwa_pliku;
+    const char* msg_0 = "Aby uruchomić funkcję wyszukiwania wybierz 1\nAby zakończyć działanie programu wybierz 0\n";
 
     while (dziala)
     {
@@ -35,16 +37,8 @@ int main()
             sprawdzeniePoprawnosci();
             break;
         case 4:
-            std::cout<<msg_0;
-            std::cin>>end;
-            // TU potrzebne odczytanie z pliku, które znajduje się w .hpp
+            cout<<msg_0;
             search(tab);
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
-        case 7:
             break;
         case 0:
             cout << "Koniec programu!" << endl;

@@ -58,21 +58,28 @@ int aktualizujPacjentow()
     for (auto& p : pacjenci) {
         Pomiary npomiary;
 
-        npomiary.set_cS(rand() % 61 + 80);  // 80–140 mmHg
+        int znak, mnoznik;
+
+        mnoznik = (znak = rand() % 2) == 0 ? 1 : -1;
+        npomiary.set_cS((rand() % 20) * mnoznik + p.cisnienie_skurczowe);
         p.cisnienie_skurczowe = npomiary.get_cS();
 
-        npomiary.set_cR(rand() % 31 + 50);  // 50–80 mmHg
+        mnoznik = (znak = rand() % 2) == 0 ? 1 : -1;
+        npomiary.set_cR((rand() % 20) * mnoznik + p.cisnienie_rozkurczowe);
         p.cisnienie_rozkurczowe = npomiary.get_cR();
 
-        npomiary.set_tetno(rand() % 61 + 50); // 50–110 uderzeń/min
+        mnoznik = (znak = rand() % 2) == 0 ? 1 : -1;
+        npomiary.set_tetno((rand() % 20) * mnoznik + p.tetno);
         p.tetno = npomiary.get_tetno();
 
-        npomiary.set_cukier(rand() % 160 + 40); // 40–200 mg/dL
+        mnoznik = (znak = rand() % 2) == 0 ? 1 : -1;
+        npomiary.set_cukier((rand() % 20) * mnoznik + p.poziom_cukru);
         p.poziom_cukru = npomiary.get_cukier();
 
         npomiary.set_utl(p.utlenienie);
 
-        npomiary.set_temp(rand() % 90 + 345); // 34.5–43.5 °C *10
+        mnoznik = (znak = rand() % 2) == 0 ? 1 : -1;
+        npomiary.set_temp((rand() % 20) * mnoznik + p.temperatura);
         p.temperatura = npomiary.get_temp();
 
         npomiary.sprawdzStan(p.wiek);
@@ -159,11 +166,11 @@ int aktualizujPacjentow()
         liczba_nowych_pacjentow += pacjenci.size();
         for (int i = id; i <= liczba_nowych_pacjentow; i++)
         {
-            string pesel = wygenerujPesel();
             int wiek = rand() % 121;
             string imie = imiona[rand() % 100];
             string nazwisko = nazwiska[rand() % 100];
             string dolegliwosc = dolegliwosci[rand() % 50];
+            string pesel = wygenerujPesel(wiek, imie);
 
             Pacjent nowy_pacjent(i, pesel, imie, nazwisko, wiek, dolegliwosc);
 
@@ -172,6 +179,6 @@ int aktualizujPacjentow()
     }
 
 
-    cout << "Zaktualizowano pomiary wszystkich pacjentów.\n";
+    cout << "Zaktualizowano stan wszystkich pacjentów.\n";
     return 0;
 }

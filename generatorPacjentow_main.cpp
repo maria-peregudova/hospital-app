@@ -85,15 +85,16 @@ int generujPacjentow()
 
     for (int i = 1; i <= liczba_pacjentow; i++)
     {
-        string pesel = wygenerujPesel();
         int wiek = rand() % 121;
         string imie = imiona[rand() % 100];
         string nazwisko = nazwiska[rand() % 100];
         string dolegliwosc = dolegliwosci[rand() % 50];
+        string pesel = wygenerujPesel(wiek, imie);
 
         Pacjent pacjent(i, pesel, imie, nazwisko, wiek, dolegliwosc);
 
         pacjent.zapisz(plik);
+
     }
     
     plik.close();

@@ -19,8 +19,9 @@ int main()
         cout << "\nMENU" << endl;
         cout << "1. Generuj Pacjentów" << endl;
         cout << "2. Aktualizuj Pacjentów" << endl;
-        cout << "3. Sprawdź poprawność parametrów Pacjentów" << endl;
-        cout << "4. Uruchom funkcję Search - wyszukaj pacjentów o zadanych cechach" << endl;
+        cout << "3. Sprawdź poprawność stanu Pacjentów" << endl;
+        cout << "4. Sprawdź poprawność parametrów Pacjentów" << endl;
+        cout << "5. Uruchom funkcję Search - wyszukaj pacjentów o zadanych cechach" << endl;
         cout << "0. Koniec programu" << endl;
         cout << "Wybierz operację: " << endl;
         cin >> wybor;
@@ -34,9 +35,12 @@ int main()
             aktualizujPacjentow();
             break;
         case 3:
-            sprawdzeniePoprawnosci();
+            sprawdzenieStanuParametrow();
             break;
         case 4:
+            sprawdzeniePoprawnosci();
+            break;
+        case 5:
             cout<<msg_0;
             search(tab);
             break;

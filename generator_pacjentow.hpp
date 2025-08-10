@@ -7,6 +7,7 @@
 #include <string> // stringi i ich metody np. back()
 #include <ctime> // time()
 #include <vector> // dodaje vectory
+#include <chrono> // aktualny czas, np. rok
 
 struct Zakres // struktura zakresu do wykorzystywania w obliczaniu pomiarów 
 {
@@ -95,13 +96,15 @@ struct PacjentDane // struktura danych pacjenta
     std::string pesel, imie, nazwisko, plec, dolegliwosc;
 };
 
-std::string wygenerujPesel();
+std::string wygenerujPesel(int wiek, std::string imie);
+int rokUrodzenia(int wiek);
 
 void wczytajPacjentow(const std::string& nazwaPliku, std::vector<PacjentDane>& pacjenci);
 void zapiszPacjentow(const std::string& nazwaPliku, const std::vector<PacjentDane>& pacjenci);
 
 int generujPacjentow();
 int aktualizujPacjentow();
+int sprawdzenieStanuParametrow();
 int sprawdzeniePoprawnosci();
 
 std::vector <std::string> split_text(const std::string &text, char delimiter);

@@ -5,6 +5,7 @@
 #include <ctime> // time()
 #include <vector> //potrzebne dla funkcji split_text
 #include <sstream> //potrzebne dla funkcji split_text
+#include <chrono> // aktualny czas, np. rok
 #include "generator_pacjentow.hpp"
 
 using namespace std;
@@ -270,14 +271,57 @@ Pacjent::Pacjent(int ID, std::string Pesel, std::string Imie, std::string Nazwis
 }
 
 // funkcja generująca Pesel
-string wygenerujPesel() 
+string wygenerujPesel(int wiek, string imie) 
 {
     string pesel = "";
-    for (int i = 0; i < 11; i++) {
-        int cyfra = rand() % 10;
-        pesel += to_string(cyfra);
+    int cyfra;
+    int rok_ur = rokUrodzenia(wiek);
+    int ostatnie_cyfry = rok_ur % 100;
+    pesel += to_string(ostatnie_cyfry);
+    for (int i = 0; i < 8; i++) {
+        if (i == 0)
+        {
+            cyfra = rand() % 2;
+            if (rok_ur >= 2000)
+            {
+                pesel += to_string(cyfra + 2);
+            } else 
+            {
+                pesel += to_string(cyfra);
+            }
+            if (cyfra == 0)
+            {
+                cyfra = rand() % 9 + 1;
+                pesel += to_string(cyfra);
+            }
+            else
+            {
+                cyfra = rand() % 3;
+                pesel += to_string(cyfra);
+            }
+        }
+        else if (i == 6)
+        {
+            cyfra = (imie.back() == 'a') ? 2 : 1;
+            pesel += to_string(cyfra);
+        }
+        else 
+        {
+            cyfra = rand() % 10;
+            pesel += to_string(cyfra);  
+        }
     }
     return pesel;
+}
+
+// funkcja obliczająca rok urodzenia
+int rokUrodzenia(int wiek)
+{
+    time_t aktualny_czas = time(nullptr);
+    tm* czas = localtime(&aktualny_czas);
+    int aktualny_rok = czas->tm_year + 1900;
+    int rok_urodzenia = aktualny_rok - wiek;
+    return rok_urodzenia;
 }
 
 // funkcje potrzebne do działania search
@@ -426,98 +470,3 @@ void search(Pacjent *tab){
   }
   
 }
-
-
-
-// int main()
-// {
-//     srand(time(0)); // zapewnia całkowita losowość wyników
-
-//     int liczba_pacjentow = rand() % 5 + 2; // losowanie ilości pacjentów
-
-//     string imiona[100] =
-//     {
-//         //Imiona kobiet kończą się literą 'a'
-//         "Anna", "Maria", "Katarzyna", "Magdalena", "Agnieszka",
-//         "Joanna", "Barbara", "Ewa", "Krystyna", "Elżbieta",
-//         "Zofia", "Teresa", "Halina", "Irena", "Jadwiga",
-//         "Danuta", "Grażyna", "Beata", "Urszula", "Małgorzata",
-//         "Natalia", "Patrycja", "Karolina", "Sylwia", "Paulina",
-//         "Dorota", "Martyna", "Alicja", "Justyna", "Weronika",
-//         "Milena", "Izabela", "Renata", "Gabriela", "Julia",
-//         "Emilia", "Olga", "Lucyna", "Aneta", "Wioletta",
-//         "Jan", "Andrzej", "Piotr", "Krzysztof", "Stanisław",
-//         "Tomasz", "Paweł", "Józef", "Marcin", "Marek",
-//         "Michał", "Grzegorz", "Jerzy", "Tadeusz", "Adam",
-//         "Zbigniew", "Ryszard", "Dariusz", "Wojciech", "Henryk",
-//         "Roman", "Kazimierz", "Edward", "Robert", "Sebastian",
-//         "Mateusz", "Antoni", "Julian", "Ignacy", "Oskar",
-//         "Bartosz", "Łukasz", "Hubert", "Karol", "Kamil",
-//         "Przemysław", "Daniel", "Konrad", "Szymon", "Damian",
-//         "Cezary", "Filip", "Maciej", "Mariusz", "Arkadiusz",
-//         "Patryk", "Rafał", "Norbert", "Tymoteusz", "Waldemar",
-//         "Lech", "Bogdan", "Borys", "Witold", "Albert"
-//     };
-
-//     string nazwiska[100] =
-//     {
-//         "Kowalski", "Nowak", "Wiśniewski", "Wójcik", "Kowalczyk",
-//         "Kamiński", "Lewandowski", "Zieliński", "Szymański", "Woźniak",
-//         "Dąbrowski", "Kozłowski", "Jankowski", "Mazur", "Wojciechowski",
-//         "Kwiatkowski", "Kaczmarek", "Piotrowski", "Grabowski", "Zając",
-//         "Król", "Wieczorek", "Jabłoński", "Wróbel", "Pawłowski",
-//         "Michalski", "Nowicki", "Adamczyk", "Dudek", "Sikora",
-//         "Walczak", "Baran", "Rutkowski", "Szewczyk", "Olszewski",
-//         "Bąk", "Szymańska", "Lis", "Makowski", "Chmielewski",
-//         "Szulc", "Brzeziński", "Czarnecki", "Sawicki", "Sokołowski",
-//         "Urbański", "Kubiak", "Kucharski", "Tomczak", "Jaworski",
-//         "Malinowski", "Piekarski", "Głowacki", "Czerwiński", "Sikorski",
-//         "Włodarczyk", "Marciniak", "Jastrzębski", "Zarzycki", "Rogowski",
-//         "Maj", "Sobczak", "Tomaszewski", "Cieślak", "Kubicki",
-//         "Kołodziej", "Milewski", "Szczepański", "Leszczyński", "Borowski",
-//         "Borkowski", "Majewski", "Urban", "Pawlak", "Kopeć",
-//         "Mróz", "Orłowski", "Musiał", "Wrona", "Brodziński",
-//         "Zawadzki", "Stefański", "Andrzejewski", "Błaszczyk", "Strzelczyk",
-//         "Marcinkowski", "Chojnacki", "Słowik", "Drozd", "Wilk",
-//         "Bednarek", "Białek", "Michalik", "Gajda", "Jóźwiak"
-//     };
-
-//     string dolegliwosci[50] =
-//     {
-//         "Grypa", "Angina", "Zapalenie płuc", "COVID-19", "Astma",
-//         "Cukrzyca", "Choroba wieńcowa", "Zawał serca", "Nadciśnienie", "Nowotwór",
-//         "Złamanie ręki", "Złamanie nogi", "Złamanie biodra", "Rana cięta", "Rana szarpana",
-//         "Oparzenie", "Odleżyny", "Reumatoidalne zapalenie stawów", "Osteoporoza", "Skolioza",
-//         "Zapalenie ucha", "Zatrucie pokarmowe", "Kamica nerkowa", "Wrzody żołądka", "Alzheimer",
-//         "Parkinson", "Migrena", "Depresja", "Nerwica", "Bezsenność",
-//         "Padaczka", "Choroba Crohna", "Hemoroidy", "Reumatyzm", "Stwardnienie rozsiane",
-//         "Zespół Downa", "Autyzm", "Biegunka", "Zaparcia", "Zapalenie gardła",
-//         "Angina ropna", "Ospa", "Różyczka", "Świnka", "Zapalenie spojówek",
-//         "Zawał mózgu", "Gruźlica", "Zapalenie oskrzeli", "Zatrucie chemiczne", "Wstrząśnienie mózgu"
-//     };
-
-
-//     ofstream plik("pacjenci.txt");
-//     if(!plik)
-//     {
-//         cerr << "Nie ma takiego pliku!\n";
-//         return 1;
-//     }
-
-//     for (int i = 1; i <= liczba_pacjentow; i++)
-//     {
-//         string pesel = wygenerujPesel();
-//         int wiek = rand() % 121;
-//         string imie = imiona[rand() % 100];
-//         string nazwisko = nazwiska[rand() % 100];
-//         string dolegliwosc = dolegliwosci[rand() % 50];
-
-//         Pacjent pacjent(i, pesel, imie, nazwisko, wiek, dolegliwosc);
-
-//         pacjent.zapisz(plik);
-//     }
-    
-//     plik.close();
-//     cout << "Zapisano dane pacjentów do pliku pacjenci.txt\n";
-//     return 0;
-// }
